@@ -14,50 +14,47 @@ namespace PersonApi.Api.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private IPersonRepository personRepository;
-        public PeopleController()
-        {
-            //TODO is this ok?
-            this.personRepository = new PersonRepository(new PersonContext());
-        }
+        private UnitOfWork unitOfWork = new UnitOfWork();
 
         // GET: api/<PeopleController>
         [HttpGet]
-        public IEnumerable<Person> Get()
+        public async Task<ActionResult<IEnumerable<Person>>> Get()
         {
-            return personRepository.GetAll();
+            return Ok(unitOfWork.PersonRepository.GetAll());
         }
 
         // GET api/<PeopleController>/5
         [HttpGet("{id}")]
-        public Person Get(int id)
+        public async Task<ActionResult<Person>> Get(int id)
         {
-            return personRepository.GetById(id);
+            return Ok(unitOfWork.PersonRepository.GetById(id));
         }
 
         // POST api/<PeopleController>
         [HttpPost]
-        public void Post([FromBody] Person person)
+        public async Task<IActionResult> Post([FromBody] Person person)
         {
-            personRepository.Insert(person);
-            personRepository.Save();
+            unitOfWork.PersonRepository.Insert(person);
+            unitOfWork.Save();
+            return Created(person.Id.ToString(), person);
         }
 
         // PUT api/<PeopleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Person person)
+        public async Task<IActionResult> Put(int id, [FromBody] Person person)
         {
-            //TODO is this ok?
-            personRepository.Update(person);
-            personRepository.Save();
+            unitOfWork.PersonRepository.Update(person);
+            unitOfWork.Save();
+            return Ok();
         }
 
         // DELETE api/<PeopleController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            personRepository.Delete(id);
-            personRepository.Save();
+            unitOfWork.PersonRepository.Delete(id);
+            unitOfWork.Save();
+            return new NoContentResult();
         }
     }
 }

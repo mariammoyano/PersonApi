@@ -8,7 +8,7 @@ using PersonApi.Domain;
 
 namespace PersonApi.Service
 {
-    class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : DbEntity
     {
         internal PersonContext context;
         internal DbSet<TEntity> dbSet;
@@ -23,7 +23,10 @@ namespace PersonApi.Service
             return dbSet.ToList<TEntity>();
         }
 
-        IEnumerable<TEntity> IGenericRepository<TEntity>.Get(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties)
+        public IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy,
+            string includeProperties)
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -72,15 +75,8 @@ namespace PersonApi.Service
         }
         public virtual void Update(TEntity entityToUpdate)
         {
-            //TODO ask about attach
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
-
-        //TODO does this go on unit of work?
-        //public virtual void Save()
-        //{
-        //    context.SaveChanges();
-        //}
     }
 }

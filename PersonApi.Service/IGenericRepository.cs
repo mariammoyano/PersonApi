@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using PersonApi.Domain;
 
 namespace PersonApi.Service
 {
-    interface IGenericRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<TEntity> where TEntity : DbEntity
     {
         public IEnumerable<TEntity> GetAll();
         IEnumerable<TEntity> Get(
