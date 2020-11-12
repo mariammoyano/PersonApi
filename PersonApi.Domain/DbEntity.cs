@@ -4,6 +4,6 @@ namespace PersonApi.Domain
 {
     public abstract class DbEntity
     {
-        Guid Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

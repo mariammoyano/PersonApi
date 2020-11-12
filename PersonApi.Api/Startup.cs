@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PersonApi.Domain;
+using PersonApi.Service;
 
 namespace PersonApi.Api
 {
@@ -28,6 +29,8 @@ namespace PersonApi.Api
         {
             services.AddControllers();
             services.AddDbContext<PersonContext>();
+            services.AddSwaggerGen();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +42,13 @@ namespace PersonApi.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 

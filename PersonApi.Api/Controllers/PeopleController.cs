@@ -14,7 +14,12 @@ namespace PersonApi.Api.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private UnitOfWork unitOfWork = new UnitOfWork();
+        private IUnitOfWork unitOfWork;
+
+        public PeopleController(IUnitOfWork unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
 
         // GET: api/<PeopleController>
         [HttpGet]

@@ -5,13 +5,17 @@ using PersonApi.Domain;
 
 namespace PersonApi.Service
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IDisposable, IUnitOfWork
     {
-        //TODO dependency injection everything
-        private PersonContext context = new PersonContext();
+        private PersonContext context;
         private GenericRepository<Person> personRepository;
 
-        public GenericRepository<Person> PersonRepository 
+        public UnitOfWork(PersonContext context)
+        {
+            this.context = context;
+        }
+
+        public GenericRepository<Person> PersonRepository
         {
             get
             {
