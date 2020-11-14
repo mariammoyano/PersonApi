@@ -30,7 +30,7 @@ namespace PersonApi.Api.Controllers
 
         // GET api/<PeopleController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Person>> Get(int id)
+        public async Task<ActionResult<Person>> Get(Guid id)
         {
             return Ok(unitOfWork.PersonRepository.GetById(id));
         }
@@ -46,7 +46,7 @@ namespace PersonApi.Api.Controllers
 
         // PUT api/<PeopleController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Person person)
+        public async Task<IActionResult> Put(Guid id, [FromBody] Person person)
         {
             unitOfWork.PersonRepository.Update(person);
             unitOfWork.Save();
@@ -55,7 +55,7 @@ namespace PersonApi.Api.Controllers
 
         // DELETE api/<PeopleController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             unitOfWork.PersonRepository.Delete(id);
             unitOfWork.Save();

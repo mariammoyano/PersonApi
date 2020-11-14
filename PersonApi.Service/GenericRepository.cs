@@ -52,7 +52,7 @@ namespace PersonApi.Service
                 return query.ToList();
             }
         }
-        public virtual TEntity GetById(int id)
+        public virtual TEntity GetById(Guid id)
         {
             return dbSet.Find(id);
         }
@@ -60,7 +60,7 @@ namespace PersonApi.Service
         {
             dbSet.Add(entity);
         }
-        public virtual void Delete(int id)
+        public virtual void Delete(Guid id)
         {
             TEntity entityToDelete = dbSet.Find(id);
             Delete(entityToDelete);

@@ -14,10 +14,10 @@ namespace PersonApi.Service
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "");
-        public TEntity GetById(int id);
+        public TEntity GetById(Guid id);
         public void Insert(TEntity entity);
         public void Update(TEntity entityToUpdate);
-        public void Delete(int id);
+        public void Delete(Guid id);
         public void Delete(TEntity entityToDelete);
     }
 }
