@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,21 +23,24 @@ namespace PersonApi.Api.Controllers
 
         // GET: api/<PeopleController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> Get()
+        [ProducesResponseType(typeof(PersonDTO), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> Get()
         {
             return Ok(unitOfWork.PersonRepository.GetAll());
         }
 
         // GET api/<PeopleController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Person>> Get(Guid id)
+        [ProducesResponseType(typeof(PersonDTO), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> Get(Guid id)
         {
             return Ok(unitOfWork.PersonRepository.GetById(id));
         }
 
         // POST api/<PeopleController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Person person)
+        [ProducesResponseType(typeof(PersonDTO), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> Post([FromBody] PersonDTO personDto)
         {
             unitOfWork.PersonRepository.Insert(person);
             unitOfWork.Save();
@@ -46,7 +49,8 @@ namespace PersonApi.Api.Controllers
 
         // PUT api/<PeopleController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] Person person)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Put(Guid id, [FromBody] PersonDTO personDto)
         {
             unitOfWork.PersonRepository.Update(person);
             unitOfWork.Save();
@@ -55,6 +59,7 @@ namespace PersonApi.Api.Controllers
 
         // DELETE api/<PeopleController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Delete(Guid id)
         {
             unitOfWork.PersonRepository.Delete(id);
