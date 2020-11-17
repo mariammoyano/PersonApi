@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace PersonApi.Api
             services.AddDbContext<PersonContext>();
             services.AddSwaggerGen();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddAutoMapper(options => { options.AddProfile<PeopleMapperProfile>(); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,8 +41,8 @@ namespace PersonApi.Api
         {
             if (env.IsDevelopment())
             {
-                var context = app.ApplicationServices.GetService<PersonContext>();
-                context.Database.Migrate();
+                //var context = app.ApplicationServices.GetService<PersonContext>();
+                //context.Database.Migrate();
                 app.UseDeveloperExceptionPage();
             }
 

@@ -1,9 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PersonApi.Domain;
+using PersonApi.Domain.DTO;
 using PersonApi.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,11 +17,13 @@ namespace PersonApi.Api.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private IUnitOfWork unitOfWork;
+        private IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public PeopleController(IUnitOfWork unitOfWork)
+        public PeopleController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // GET: api/<PeopleController>
@@ -26,7 +31,7 @@ namespace PersonApi.Api.Controllers
         [ProducesResponseType(typeof(PersonDTO), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> Get()
         {
-            return Ok(unitOfWork.PersonRepository.GetAll());
+            return Ok(_unitOfWork.PersonRepository.GetAll());
         }
 
         // GET api/<PeopleController>/5
@@ -34,7 +39,7 @@ namespace PersonApi.Api.Controllers
         [ProducesResponseType(typeof(PersonDTO), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> Get(Guid id)
         {
-            return Ok(unitOfWork.PersonRepository.GetById(id));
+            return Ok(_unitOfWork.PersonRepository.GetById(id));
         }
 
         // POST api/<PeopleController>
@@ -42,9 +47,10 @@ namespace PersonApi.Api.Controllers
         [ProducesResponseType(typeof(PersonDTO), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Post([FromBody] PersonDTO personDto)
         {
-            unitOfWork.PersonRepository.Insert(person);
-            unitOfWork.Save();
-            return Created(person.Id.ToString(), person);
+            var person = _mapper.Map<Person>(personDto);
+            _unitOfWork.PersonRepository.Insert(person);
+            _unitOfWork.Save();
+            return Created(person.Id.ToString(), _mapper.Map<PersonDTO>(person));
         }
 
         // PUT api/<PeopleController>/5
@@ -52,8 +58,8 @@ namespace PersonApi.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Put(Guid id, [FromBody] PersonDTO personDto)
         {
-            unitOfWork.PersonRepository.Update(person);
-            unitOfWork.Save();
+            _unitOfWork.PersonRepository.Update(_mapper.Map<Person>(personDto));
+            _unitOfWork.Save();
             return Ok();
         }
 
@@ -62,8 +68,8 @@ namespace PersonApi.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            unitOfWork.PersonRepository.Delete(id);
-            unitOfWork.Save();
+            _unitOfWork.PersonRepository.Delete(id);
+            _unitOfWork.Save();
             return new NoContentResult();
         }
     }
